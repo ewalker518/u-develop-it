@@ -1,24 +1,13 @@
-const mysql = require('mysql2');
+// const mysql = require('mysql2');
 const express = require('express');
 const PORT = process.env.PORT || 3003;
 const app = express();
-const dotenv = require('dotenv').config();
+const db = require('./db/connection');
 const inputCheck = require('./utils/inputCheck');
 
 // Express middleware
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-
-// Connect to database
-const db = mysql.createConnection(
-    {
-        host: 'localhost',
-        user: 'root',
-        password: '',
-        database: 'election'
-    },
-    console.log('Connected to the election database.')
-);
 
 // Get all candidates
 app.get('/api/candidates', (req, res) => {
@@ -168,7 +157,7 @@ app.get('/api/party/:id', (req, res) => {
 });
 
 // Delete a party
-pp.delete('/api/party/:id', (req, res) => {
+app.delete('/api/party/:id', (req, res) => {
     const sql = `DELETE FROM parties WHERE id = ?`;
     const params = [req.params.id];
     db.query(sql, params, (err, result) => {
